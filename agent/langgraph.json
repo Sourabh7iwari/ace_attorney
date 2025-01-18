@@ -1,0 +1,9 @@
+{
+    "python_version": "3.12",
+    "dockerfile_lines": [],
+    "dependencies": ["."],
+    "graphs": {
+      "ace_attorney_workflow": "./agent/workflow.py:graph"
+    },
+    "env": "../.env"
+  }
