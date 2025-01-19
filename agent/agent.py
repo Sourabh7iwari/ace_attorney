@@ -1,68 +1,68 @@
-from fastapi import FastAPI
-from langgraph.graph import StateGraph
-from langgraph.checkpoint.memory import MemorySaver
-from state import DebateState
-from nodes import prosecutor_argument, defendant_argument, judge_evaluation
-from edges import decide_prosecutor_argument, decide_defendant_argument, decide_judge_verdict
-from workflow import graph  # Import the compiled workflow
-import uvicorn
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import Optional, Dict, Any
 import os
-import sys
+from groq import Groq
+from dotenv import load_dotenv
+from agent.workflow import graph
+from datetime import datetime
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Load environment variables
+load_dotenv()
 
-# Initialize FastAPI app
 app = FastAPI()
 
-# Define the agent
-class AceAttorneyAgent:
-    def __init__(self):
-        """
-        Initializes the Ace Attorney agent with the compiled workflow.
-        """
-        self.workflow = graph
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-    async def run(self, topic: str) -> DebateState:
-        """
-        Runs the Ace Attorney workflow for a given topic.
+class DebateRequest(BaseModel):
+    topic: str
+    metadata: Optional[Dict[str, Any]] = None
 
-        Args:
-            topic: The topic of the debate (e.g., "Should AI be regulated?").
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
-        Returns:
-            The final state of the debate, including arguments and judgment.
-        """
-        # Initialize the state
-        state: DebateState = {
-            "topic": topic,
-            "prosecutor_arguments": [],
-            "defendant_arguments": [],
-            "judgment": "",
-            "messages": [],
-        }
-
-        # Run the workflow
-        final_state = await self.workflow.arun(state)
-        return final_state
-
-# Initialize the agent
-agent = AceAttorneyAgent()
-
-# Define FastAPI endpoints
 @app.post("/debate")
-async def debate(topic: str):
-    """
-    Endpoint to start a debate on a given topic.
+async def start_debate(request: DebateRequest):
+    try:
+        if not request.topic:
+            raise HTTPException(status_code=400, detail="Topic cannot be empty")
+            
+        # Create initial state
+        from agent.state import create_initial_state
+        initial_state = create_initial_state(request.topic)
+        
+        # Run the graph synchronously since LangGraph doesn't support async yet
+        final_state = graph.invoke(initial_state)
+        
+        return {
+            "topic": request.topic,
+            "prosecutor_arguments": [arg.dict() for arg in final_state["prosecutor_arguments"]],
+            "defendant_arguments": [arg.dict() for arg in final_state["defendant_arguments"]],
+            "judgment": final_state.get("judgment"),
+            "metadata": final_state["metadata"]
+        }
+        
+    except Exception as e:
+        print(f"Error in debate: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
-    Args:
-        topic: The topic of the debate (e.g., "Should AI be regulated?").
+@app.post("/api/copilotkit")
+async def copilotkit_handler(request: Request):
+    try:
+        data = await request.json()
+        return {"message": "Request processed successfully", "data": data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-    Returns:
-        The final state of the debate, including arguments and judgment.
-    """
-    result = await agent.run(topic)
-    return result
-
-# Run the FastAPI server
 if __name__ == "__main__":
+    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

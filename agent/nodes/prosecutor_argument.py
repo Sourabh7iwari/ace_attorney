@@ -1,7 +1,8 @@
+from agent.state import DebateState, DebateMessage
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
-from agent.state import DebateState
 import os
+from datetime import datetime
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -23,10 +24,27 @@ def prosecutor_argument(state: DebateState) -> DebateState:
     """
     Generates an argument in favor of the topic using the GROQ API.
     """
+    # Initialize state if needed
+    if "prosecutor_arguments" not in state:
+        state["prosecutor_arguments"] = []
+    if "metadata" not in state:
+        state["metadata"] = {"round": 0, "current_speaker": "prosecutor"}
+
     # Generate the argument
     chain = prosecutor_prompt | llm
-    argument = chain.invoke({"topic": state["topic"]}).content
+    argument_content = chain.invoke({"topic": state["topic"]}).content
+
+    # Create a DebateMessage
+    argument = DebateMessage(
+        content=argument_content,
+        speaker="prosecutor",
+        confidence=0.8,  # Default confidence
+        timestamp=datetime.now().isoformat()
+    )
 
     # Add the argument to the state
     state["prosecutor_arguments"].append(argument)
+    state["metadata"]["current_speaker"] = "defendant"
+    state["metadata"]["round"] += 1
+    
     return state
