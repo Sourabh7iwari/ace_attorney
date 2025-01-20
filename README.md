@@ -14,7 +14,6 @@ The **Ace Attorney AI App** simulates a legal debate between a prosecutor and a 
 - **Structured Workflow**: Alternates arguments between the prosecutor and defendant in a logical sequence.
 - **State Management**: Handles transitions between rounds effectively.
 - **Error Handling & Logging**: Enhanced debugging capabilities with robust error handling and logging.
-- **Multiple Rounds**: Supports multiple rounds of arguments and counter-arguments.
 - **AI Integration**: Utilizes **CopilotKit** and **Groq** for intelligent debate simulation.
 
 ---
