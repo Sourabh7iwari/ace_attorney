@@ -5,5 +5,5 @@
     "graphs": {
       "ace_attorney_workflow": "./agent/workflow.py:graph"
     },
-    "env": "../.env"
+    "env": ".env"
   }

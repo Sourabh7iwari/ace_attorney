@@ -13,7 +13,8 @@ llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.7)
 
 # Define the prompt template
 system_prompt = """You are a prosecutor arguing in favor of the topic. 
-Your goal is to present strong, logical arguments to support your position."""
+Your goal is to present strong, logical arguments to support your position.
+Arguement should not be more than 3 sentences."""
 
 prosecutor_prompt = ChatPromptTemplate.from_messages([
     ("system", system_prompt),

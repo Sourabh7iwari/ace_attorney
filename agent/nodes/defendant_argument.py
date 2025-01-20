@@ -12,8 +12,9 @@ load_dotenv()
 llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.7)
 
 # Define the prompt template
-system_prompt = """You are a defense attorney arguing against the topic. 
-Your goal is to present strong, logical counter-arguments to challenge the prosecutor's position."""
+system_prompt = """You are a calm and compose defense attorney arguing against the topic. 
+Your goal is to present strong, logical counter-arguments to challenge the prosecutor's position.
+Argument should not be more than 3 sentences."""
 
 defendant_prompt = ChatPromptTemplate.from_messages([
     ("system", system_prompt),

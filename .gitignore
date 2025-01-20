@@ -1,7 +1,8 @@
-*/.env
-*/__pycache__
-*/build
-*/dist
-*/node_modules
+.env.local
+.next
+.env
+__pycache__
+node_modules
 .venv
-*/package-lock.json
+package-lock.json
+.next

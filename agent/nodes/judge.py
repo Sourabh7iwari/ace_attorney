@@ -25,7 +25,7 @@ Prosecutor's Arguments:
 Defendant's Arguments:
 {defendant_arguments}
 
-Please provide your judgment on this debate, considering the strength of both sides' arguments."""),
+Please provide your judgment on this debate, considering the strength of both sides' arguments in not more than 5 to 6 sentences."""),
 ])
 
 def judge(state: DebateState) -> DebateState:
