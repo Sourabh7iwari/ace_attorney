@@ -107,7 +107,7 @@ Below are screenshots of the Ace Attorney AI App in action:
 
 Check out a demo of the application:
 
-[![Ace Attorney Demo](https://img.youtube.com/vi/8kxrYMA6YzA/2.jpg)](./ace_attorney_demo.mp4 "Watch the demo")
+[![Ace Attorney Demo](https://img.youtube.com/vi/8kxrYMA6YzA/2.jpg)](https://youtube.com/watch?v=X8rCZezMa1g "Watch the demo")
 
 
 ---
