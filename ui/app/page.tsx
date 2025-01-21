@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import DebateForm from '../components/debate-form';
 import DebateInterface from '../components/debate-interface';
-import { CopilotTextarea } from "@copilotkit/react-textarea";
 import { motion } from 'framer-motion';
 
 interface DebateMessage {
@@ -37,7 +36,7 @@ export default function Home() {
   const handleStartDebate = async (topic: string) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch('/api/debate', {
         method: 'POST',
@@ -53,7 +52,7 @@ export default function Home() {
       }
 
       const data: DebateResponse = await response.json();
-      
+
       // Update state with debate data
       setProsecutorArguments(data.prosecutor_arguments);
       setDefendantArguments(data.defendant_arguments);
@@ -72,26 +71,27 @@ export default function Home() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="container mx-auto px-4 py-8"
+        className="container"
       >
-        <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
-          Ace Attorney AI
-        </h1>
-        
-        {error && (
-          <div className="max-w-2xl mx-auto mb-6 p-4 bg-red-100 text-red-700 rounded-lg">
-            {error}
-          </div>
-        )}
+        <h1 className="mb-8">Ace Attorney AI</h1>
+
+        {error && <div className="error-alert">{error}</div>}
 
         <DebateForm onSubmit={handleStartDebate} isLoading={isLoading} />
-        
-        <DebateInterface
-          prosecutorArguments={prosecutorArguments}
-          defendantArguments={defendantArguments}
-          judgment={judgment}
-          isLoading={isLoading}
-        />
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="debate-container mt-8"
+        >
+          <DebateInterface
+            prosecutorArguments={prosecutorArguments}
+            defendantArguments={defendantArguments}
+            judgment={judgment}
+            isLoading={isLoading}
+          />
+        </motion.div>
       </motion.div>
     </main>
   );

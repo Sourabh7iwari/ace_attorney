@@ -1,4 +1,3 @@
-
 ---
 
 # Ace Attorney AI App MVP
@@ -97,9 +96,19 @@ The **Ace Attorney AI App** simulates a legal debate between a prosecutor and a 
 
 ## Screenshots
 
-Below is a screenshot of the Ace Attorney AI App in action:
+Below are screenshots of the Ace Attorney AI App in action:
 
-![Ace Attorney AI App Screenshot](./ss.png)
+![Screenshot 1](./ss1.png)
+![Screenshot 2](./ss2.png)
+
+---
+
+## Demo
+
+Check out a demo of the application:
+
+[![Ace Attorney Demo](https://img.youtube.com/vi/8kxrYMA6YzA/2.jpg)](./ace_attorney_demo.mp4 "Watch the demo")
+
 
 ---
 
